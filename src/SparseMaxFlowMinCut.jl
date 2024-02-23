@@ -45,6 +45,19 @@ function Graph(n::Int, A::Vector{ArcFlow})
     return g
 end
 
+# reset the arc values in the graph
+function reset(g::Graph, A::Vector{ArcFlow}, buffer::Vector{Int})
+    arc_pos = buffer
+    resize!(arc_pos, g._n)
+    fill!(arc_pos, 0)
+    for a in A
+        arc_pos[a.i] += 1
+        g.val[a.i][arc_pos[a.i]] = a.f
+        arc_pos[a.j] += 1
+        g.val[a.j][arc_pos[a.j]] = 0
+    end
+end
+
 # find a path p from s to t using only non-zero arcs and return its minimum arc value, and p
 # * the path is represented by a sequence of vertex indices in adjacency lists starting at
 #   t until reach s.
